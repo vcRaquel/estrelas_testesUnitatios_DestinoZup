@@ -8,6 +8,7 @@ import br.com.zup.DestinoZup.regiao.Regiao;
 import br.com.zup.DestinoZup.regiao.RegiaoNaoEncontradaException;
 import br.com.zup.DestinoZup.regiao.RegiaoRepository;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,16 +37,25 @@ public class DestinoServiceTest {
     @Autowired
     private DestinoService destinoService;
 
+    //atributos que serão instanciados e valorados no setup
+    private Destino destino;
+    private Regiao regiao;
+
+    //irá ser executado antes de cada método criando as instâncias necessárias e evitando repetição de código
+    @BeforeEach
+    public void setup(){
+        //instâncias e atribuições de valor
+        destino = new Destino();
+        regiao = new Regiao();
+        regiao.setNome("Xablau");
+        destino.setRegiao(regiao);
+    }
+
     @Test
     public void testarSalvarDestinoCaminhoRuim(){
         //Mockito: usado para a manipulação do MockBean
         Mockito.when(regiaoRepository.existsById(Mockito.anyString())).thenReturn(false);
 
-        //instâncias e atribuições de valor
-        Destino destino = new Destino();
-        Regiao regiao = new Regiao();
-        regiao.setNome("Xablau");
-        destino.setRegiao(regiao);
 
         //teste em si, testar a exception de RegiaoNaoEncontrada no método salvarDestino da destinoService
         Assertions.assertThrows(RegiaoNaoEncontradaException.class, () -> {destinoService.salvarDestino(destino);});
@@ -53,12 +63,6 @@ public class DestinoServiceTest {
 
     @Test
     public void testarSalvarDestinoCaminhoPositivo(){
-        //instâncias e atribuições de valor
-        Destino destino = new Destino();
-        Regiao regiao = new Regiao();
-        regiao.setNome("Xablau");
-        destino.setRegiao(regiao);
-
         //Mockito: usado para a manipulação do MockBean
         //para o método de existsById
         Mockito.when(regiaoRepository.existsById(Mockito.anyString())).thenReturn(true);
@@ -68,13 +72,15 @@ public class DestinoServiceTest {
 
         //teste em si, testar o método salvarDestino da destinoService e verificar se o método de salvar
         // com parâmetro destino foi chamado apenas uma vez no mokito da destinoRepository:
+        Destino destinoObj = destinoService.salvarDestino(destino);
 
-        destinoService.salvarDestino(destino);
         //Mockito.verify verifica quantas vezes um método é chamado dentro do método testado (salvarDestino nesse caso)
         //Nesse mockito estamos verificando o método save do destinoRepository
         Mockito.verify(destinoRepository, Mockito.times(1)).save(destino);
-
         //??? perguntar/verificar se é pelo menos uma vez ou apenas uma vez ???
+
+        //verifica se o nome do destinoObj e do destino são iguais:
+        Assertions.assertEquals(destinoObj.getNome(), destino.getNome());
 
     }
     //obs:
