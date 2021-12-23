@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 //poderia ser usado o @Component, mas o @Service é mais específico
 @Service
 public class DestinoService {
-//faz os atributos com todos os elementos a terem injeção de dependência
+    //faz os atributos com todos os elementos a terem injeção de dependência
     private DestinoRepository destinoRepository;
     private RegiaoRepository regiaoRepository;
     private CategoriaRepository categoriaRepository;

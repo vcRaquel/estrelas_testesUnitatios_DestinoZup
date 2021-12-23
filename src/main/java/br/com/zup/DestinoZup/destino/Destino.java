@@ -13,10 +13,10 @@ public class Destino {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String nome;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     private Regiao regiao;
-    @ManyToMany
-    private List<Categoria> categoria;
+    @ManyToMany(cascade = CascadeType.MERGE)
+    private List<Categoria> categorias;
 
     public Destino() {
     }
@@ -45,11 +45,11 @@ public class Destino {
         this.regiao = regiao;
     }
 
-    public List<Categoria> getCategoria() {
-        return categoria;
+    public List<Categoria> getCategorias() {
+        return categorias;
     }
 
-    public void setCategoria(List<Categoria> categoria) {
-        this.categoria = categoria;
+    public void setCategorias(List<Categoria> categorias) {
+        this.categorias = categorias;
     }
 }
